@@ -68,7 +68,7 @@ async function analyzeCode(
       const prompt = createPrompt(file, chunk, prDetails);
       const aiResponse = await getAIResponse(prompt);
       if (aiResponse) {
-        const newComments = createComment(file, chunk, aiResponse);
+        const newComments = createComment(file, aiResponse);
         if (newComments) {
           comments.push(...newComments);
         }
@@ -148,7 +148,6 @@ async function getAIResponse(prompt: string): Promise<Array<{
 
 function createComment(
   file: File,
-  chunk: Chunk,
   aiResponses: Array<{
     lineNumber: string;
     reviewComment: string;
