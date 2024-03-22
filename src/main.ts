@@ -4,6 +4,7 @@ import OpenAI from "openai";
 import { Octokit } from "@octokit/rest";
 import parseDiff, { Chunk, File } from "parse-diff";
 import minimatch from "minimatch";
+import { extname } from "path";
 
 const GITHUB_TOKEN: string = core.getInput("GITHUB_TOKEN");
 const OPENAI_API_KEY: string = core.getInput("OPENAI_API_KEY");
@@ -220,16 +221,17 @@ async function main() {
 
   const parsedDiff = parseDiff(diff);
 
-  const excludePatterns = core
-    .getInput("exclude")
+  const includePatterns = core
+    .getInput("include")
     .split(",")
     .map((s) => s.trim());
-
+  console.debug("Included patterns: " + includePatterns);
   const filteredDiff = parsedDiff.filter((file) => {
-    return !excludePatterns.some((pattern) =>
-      minimatch(file.to ?? "", pattern)
-    );
+    console.debug("Filtered Diff: " + file, file);
+    return includePatterns.indexOf(extname(file.to ?? "")) > -1;
   });
+
+  console.debug("Filtered Diffs:", filteredDiff);
 
   const comments = await analyzeCode(filteredDiff, prDetails);
   if (comments.length > 0) {
