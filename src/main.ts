@@ -68,7 +68,6 @@ async function analyzeCode(
       const prompt = createPrompt(file, chunk, prDetails);
       const aiResponse = await getAIResponse(prompt);
       if (aiResponse) {
-        console.debug("this is the ai response:" + aiResponse);
         const newComments = createComment(file, aiResponse);
         if (newComments) {
           comments.push(...newComments);
@@ -210,12 +209,12 @@ async function main() {
 
     diff = String(response.data);
   } else {
-    console.log("Unsupported event:", process.env.GITHUB_EVENT_NAME);
+    console.debug("Unsupported event:", process.env.GITHUB_EVENT_NAME);
     return;
   }
 
   if (!diff) {
-    console.log("No diff found");
+    console.debug("No diff found");
     return;
   }
 
