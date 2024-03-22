@@ -95,7 +95,8 @@ function analyzeCode(parsedDiff, prDetails) {
                 const prompt = createPrompt(file, chunk, prDetails);
                 const aiResponse = yield getAIResponse(prompt);
                 if (aiResponse) {
-                    const newComments = createComment(file, chunk, aiResponse);
+                    console.debug("this is the ai response:" + aiResponse);
+                    const newComments = createComment(file, aiResponse);
                     if (newComments) {
                         comments.push(...newComments);
                     }
@@ -163,7 +164,7 @@ function getAIResponse(prompt) {
         }
     });
 }
-function createComment(file, chunk, aiResponses) {
+function createComment(file, aiResponses) {
     return aiResponses.flatMap((aiResponse) => {
         if (!file.to) {
             return [];
